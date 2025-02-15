@@ -51,9 +51,9 @@ jobs:
 
       - name: Gerar arquivo de variáveis de ambiente
         run: |
-          echo "PRIVATE_KEY=${{ vars.PRIVATE_KEY }}" >> env_vars.txt
-          echo "STARKBANK_PROJECT_ID=${{ vars.STARKBANK_PROJECT_ID }}" >> env_vars.txt
-          echo "TARGET_ACCOUNT=${{ vars.TARGET_ACCOUNT }}" >> env_vars.txt
+          echo 'PRIVATE_KEY: "${{ vars.PRIVATE_KEY }}"' > env_vars.yaml
+          echo 'STARKBANK_PROJECT_ID: "${{ vars.STARKBANK_PROJECT_ID }}"' >> env_vars.yaml
+          echo 'TARGET_ACCOUNT: "${{ vars.TARGET_ACCOUNT }}"' >> env_vars.yaml
 
       - name: Deploy to Cloud Run
         run: |
@@ -62,4 +62,4 @@ jobs:
             --region us-central1 \
             --platform managed \
             --allow-unauthenticated \
-            --env-vars-file=env_vars.txt
+            --env-vars-file=env_vars.yaml
