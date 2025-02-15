@@ -55,4 +55,6 @@ jobs:
             --region us-central1 \
             --platform managed \
             --allow-unauthenticated \
-            --set-env-vars PRIVATE_KEY="${{ vars.PRIVATE_KEY }}",STARKBANK_PROJECT_ID="${{ vars.STARKBANK_PROJECT_ID }}",TARGET_ACCOUNT="${{ vars.TARGET_ACCOUNT }}"
+            --set-env-vars PRIVATE_KEY="${{ vars.PRIVATE_KEY }}" \
+            --set-env-vars STARKBANK_PROJECT_ID="${{ vars.STARKBANK_PROJECT_ID }}" \
+            --set-env-vars TARGET_ACCOUNT="${{ vars.TARGET_ACCOUNT }}"
