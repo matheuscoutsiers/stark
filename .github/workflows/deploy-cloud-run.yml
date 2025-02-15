@@ -34,15 +34,11 @@ jobs:
           STARKBANK_PROJECT_ID: ${{ vars.STARKBANK_PROJECT_ID }}
           TARGET_ACCOUNT: ${{ vars.TARGET_ACCOUNT }}
 
-      # Configura o Google Cloud SDK (autentica e seleciona projeto)
-      - name: Configurar Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+      # Autentica no Google Cloud SDK
+      - name: Autenticar Google Cloud SDK
+        uses: google-github-actions/auth@v1
         with:
-          # Estes valores devem ser criados em Settings > Repository Variables
-          service_account_key: ${{ vars.GCP_SA_KEY }}   # JSON da Service Account
-          project_id: ${{ vars.GCP_PROJECT_ID }}
-          export_default_credentials: true
-          # install_components: cloud-run  <- REMOVED this line
+          credentials_json: ${{ vars.GCP_SA_KEY }}
 
       # Build da imagem no Cloud Build, usando seu Dockerfile
       - name: Build Docker image
