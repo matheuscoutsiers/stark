@@ -28,8 +28,13 @@ jobs:
           pip install pytest
 
       - name: Rodar testes
-        run: PYTHONPATH=. pytest tests/test_app.py  # Pré-adiciona o diretório atual ao PYTHONPATH
-        working-directory: ${{ github.workspace }} # Garante que o diretório de trabalho é a raiz do repositório
+        run: PYTHONPATH=. pytest tests/test_app.py
+        working-directory: ${{ github.workspace }}
+        env: # Define environment variables for the test step
+          PRIVATE_KEY: ${{ vars.PRIVATE_KEY }} # Provide the PRIVATE_KEY from GitHub Actions vars
+          STARKBANK_PROJECT_ID: ${{ vars.STARKBANK_PROJECT_ID }} # If needed during import
+          TARGET_ACCOUNT: ${{ vars.TARGET_ACCOUNT }} # If needed during import
+          # Add other env vars if main.py needs them for initialization
 
       # Configura o Google Cloud SDK usando as credenciais e ID do projeto
       - name: Configurar Google Cloud SDK
