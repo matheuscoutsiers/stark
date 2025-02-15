@@ -14,6 +14,7 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v3
 
+      # Configure o Python e rode testes (mantido como no seu exemplo)
       - name: Configurar Python
         uses: actions/setup-python@v4
         with:
@@ -21,6 +22,8 @@ jobs:
 
       - name: Instalar dependências
         run: |
+          python -m venv venv
+          source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest
@@ -28,34 +31,44 @@ jobs:
       - name: Rodar testes
         run: PYTHONPATH=. pytest tests/test_app.py
         env:
+          # Se seus testes precisarem dessas variáveis:
           PRIVATE_KEY: ${{ vars.PRIVATE_KEY }}
           STARKBANK_PROJECT_ID: ${{ vars.STARKBANK_PROJECT_ID }}
           TARGET_ACCOUNT: ${{ vars.TARGET_ACCOUNT }}
 
+      # Autentica no Google Cloud SDK
       - name: Autenticar Google Cloud SDK
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ vars.GCP_SA_KEY }}
 
+      # Configurar Google Cloud SDK for PATH (no auth)
+      - name: Configurar Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: 'latest' # Ensure gcloud is set up in PATH
+          project_id: ${{ vars.GCP_PROJECT_ID }} # still need project ID
+
+      # Build da imagem no Cloud Build, usando seu Dockerfile
       - name: Build Docker image
         run: |
           gcloud builds submit \
             --tag gcr.io/${{ vars.GCP_PROJECT_ID }}/stark-back \
             --project ${{ vars.GCP_PROJECT_ID }}
-          
-          # Generate environment variables file
-          - name: Generate environment variables file
-            run: |
-              echo "PRIVATE_KEY=${{ vars.PRIVATE_KEY }}" >> env_vars.txt
-              echo "STARKBANK_PROJECT_ID=${{ vars.STARKBANK_PROJECT_ID }}" >> env_vars.txt
-              echo "TARGET_ACCOUNT=${{ vars.TARGET_ACCOUNT }}" >> env_vars.txt
-          
-          # Deploy to Cloud Run, definindo as variáveis de ambiente usando arquivo
-          - name: Deploy to Cloud Run
-            run: |
-              gcloud run deploy stark-back \
-                --image gcr.io/${{ vars.GCP_PROJECT_ID }}/stark-back \
-                --region us-central1 \
-                --platform managed \
-                --allow-unauthenticated \
-                --env-vars-file=env_vars.txt
+
+      # Generate environment variables file
+      - name: Generate environment variables file
+        run: |
+          echo "PRIVATE_KEY=${{ vars.PRIVATE_KEY }}" >> env_vars.txt
+          echo "STARKBANK_PROJECT_ID=${{ vars.STARKBANK_PROJECT_ID }}" >> env_vars.txt
+          echo "TARGET_ACCOUNT=${{ vars.TARGET_ACCOUNT }}" >> env_vars.txt
+
+      # Deploy to Cloud Run, definindo as variáveis de ambiente usando arquivo
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy stark-back \
+            --image gcr.io/${{ vars.GCP_PROJECT_ID }}/stark-back \
+            --region us-central1 \
+            --platform managed \
+            --allow-unauthenticated \
+            --env-vars-file=env_vars.txt
