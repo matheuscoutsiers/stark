@@ -1,0 +1,18 @@
+# Environment Variables
+.env
+
+# Virtual Environment
+.venv/
+venv/
+
+# Keys and Sensitive Files
+chaves/
+ngrok_senhas.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE - PyCharm/IntelliJ
+.idea/
