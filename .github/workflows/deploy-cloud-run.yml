@@ -59,8 +59,8 @@ jobs:
           cat << EOF > env_vars.yaml
           PRIVATE_KEY: |
             $(echo "$PRIVATE_KEY" | sed 's/^/      /')
-          STARKBANK_PROJECT_ID: "$(echo "$STARKBANK_PROJECT_ID")"
-          TARGET_ACCOUNT: "$(echo "$TARGET_ACCOUNT")"
+          STARKBANK_PROJECT_ID: "${STARKBANK_PROJECT_ID}"
+          TARGET_ACCOUNT: "${TARGET_ACCOUNT}"
           EOF
 
           # Verify the file contents
@@ -73,4 +73,4 @@ jobs:
             --region us-central1 \
             --platform managed \
             --allow-unauthenticated \
-            --set-env-vars-file=env_vars.yaml
+            --env-vars-file env_vars.yaml
