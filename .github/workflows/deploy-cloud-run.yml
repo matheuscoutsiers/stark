@@ -56,15 +56,11 @@ jobs:
           TARGET_ACCOUNT: ${{ vars.TARGET_ACCOUNT }}
         run: |
           PRIVATE_KEY_SINGLE_LINE=$(echo "$PRIVATE_KEY" | awk '{printf "%s\\n", $0}' | sed 's/\\n$//')
-          # Replace newlines with \n (or base64 encode if appropriate)
-  
           {
             echo "PRIVATE_KEY: \"$PRIVATE_KEY_SINGLE_LINE\""
             echo "STARKBANK_PROJECT_ID: \"$STARKBANK_PROJECT_ID\""
             echo "TARGET_ACCOUNT: \"$TARGET_ACCOUNT\""
           } > env_vars.yaml
-          # Display the contents for debugging
-          cat env_vars.yaml
 
       - name: Deploy to Cloud Run
         run: |
