@@ -71,4 +71,4 @@ jobs:
             --platform managed \
             --allow-unauthenticated \
             --env-vars-file env_vars.yaml \
-            --timeout 10000
+            --timeout 10
