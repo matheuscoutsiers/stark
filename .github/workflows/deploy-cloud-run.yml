@@ -55,12 +55,15 @@ jobs:
           STARKBANK_PROJECT_ID: ${{ vars.STARKBANK_PROJECT_ID }}
           TARGET_ACCOUNT: ${{ vars.TARGET_ACCOUNT }}
         run: |
-          echo "PRIVATE_KEY: |" > env_vars.yaml
-          echo "$PRIVATE_KEY" | sed 's/^/  /' >> env_vars.yaml
-          echo "STARKBANK_PROJECT_ID: \"${STARKBANK_PROJECT_ID}\"" >> env_vars.yaml
-          echo "TARGET_ACCOUNT: \"${TARGET_ACCOUNT}\"" >> env_vars.yaml
+          # Write variables to file directly
+          {
+            echo "PRIVATE_KEY: |"
+            printf "%s\n" "$PRIVATE_KEY" | sed 's/^/  /'
+            echo "STARKBANK_PROJECT_ID: \"$STARKBANK_PROJECT_ID\""
+            echo "TARGET_ACCOUNT: \"$TARGET_ACCOUNT\""
+          } > env_vars.yaml
 
-          # Verify the contents
+          # Display the contents for debugging
           cat env_vars.yaml
 
       - name: Deploy to Cloud Run
