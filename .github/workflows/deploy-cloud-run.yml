@@ -55,7 +55,7 @@ jobs:
           STARKBANK_PROJECT_ID: ${{ vars.STARKBANK_PROJECT_ID }}
           TARGET_ACCOUNT: ${{ vars.TARGET_ACCOUNT }}
         run: |
-          PRIVATE_KEY_SINGLE_LINE=$(echo "$PRIVATE_KEY" | awk '{printf "%s\\n", $0}' | sed 's/\\n$//')
+          PRIVATE_KEY_SINGLE_LINE=$(echo "$PRIVATE_KEY" | sed ':a;N;$!ba;s/\n/\\n/g')
           {
             echo "PRIVATE_KEY: \"$PRIVATE_KEY_SINGLE_LINE\""
             echo "STARKBANK_PROJECT_ID: \"$STARKBANK_PROJECT_ID\""
