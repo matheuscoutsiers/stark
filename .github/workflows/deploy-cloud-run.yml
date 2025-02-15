@@ -7,49 +7,46 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test-build-deploy:
+  build-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do código
+      - name: Checkout
         uses: actions/checkout@v3
 
-      # (Opcional) Configure o Python e rode testes
-      - name: Configurar Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
-      - name: Instalar dependências
+      - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest
 
-      - name: Rodar testes
-        run: PYTHONPATH=. pytest tests/test_app.py
+      - name: Run tests
+        run: pytest tests
+        # Se os testes precisam de variáveis de ambiente, injete-as:
         env:
-          # Se seu teste precisar dessas variáveis
           PRIVATE_KEY: ${{ vars.PRIVATE_KEY }}
           STARKBANK_PROJECT_ID: ${{ vars.STARKBANK_PROJECT_ID }}
           TARGET_ACCOUNT: ${{ vars.TARGET_ACCOUNT }}
 
-      # Configurar Google Cloud SDK (autenticação e definição do projeto)
-      - name: Configurar Google Cloud SDK
+      - name: Configure gcloud
         uses: google-github-actions/setup-gcloud@v1
         with:
-          service_account_key: ${{ vars.GCP_SA_KEY }}  # JSON do service account
+          service_account_key: ${{ vars.GCP_SA_KEY }}   # JSON da Service Account
           project_id: ${{ vars.GCP_PROJECT_ID }}
-          export_default_credentials: true  # Permite usar gcloud sem auth manual
+          export_default_credentials: true
+          install_components: cloud-run
 
-      # Build da imagem no Cloud Build, usando seu Dockerfile
-      - name: Build Docker image
+      - name: Build image with Cloud Build
         run: |
+          # Agora o gcloud já está autenticado
           gcloud builds submit \
-            --tag gcr.io/${{ vars.GCP_PROJECT_ID }}/stark-back \
-            --project ${{ vars.GCP_PROJECT_ID }}
+            --tag gcr.io/${{ vars.GCP_PROJECT_ID }}/stark-back
 
-      # Deploy no Cloud Run, definindo as variáveis de ambiente
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy stark-back \
