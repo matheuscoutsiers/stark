@@ -55,11 +55,12 @@ jobs:
           STARKBANK_PROJECT_ID: ${{ vars.STARKBANK_PROJECT_ID }}
           TARGET_ACCOUNT: ${{ vars.TARGET_ACCOUNT }}
         run: |
-          echo "PRIVATE_KEY: |" > env_vars.yaml
-          # Indenta cada linha da PRIVATE_KEY para formar um bloco YAML válido
-          printf "%s\n" "$PRIVATE_KEY" | sed 's/^/  /' >> env_vars.yaml
-          echo "STARKBANK_PROJECT_ID: \"$STARKBANK_PROJECT_ID\"" >> env_vars.yaml
-          echo "TARGET_ACCOUNT: \"$TARGET_ACCOUNT\"" >> env_vars.yaml
+          cat <<EOF > env_vars.yaml
+          PRIVATE_KEY: |
+          $(printf "%s\n" "$PRIVATE_KEY" | sed 's/^/  /')
+          STARKBANK_PROJECT_ID: "$STARKBANK_PROJECT_ID"
+          TARGET_ACCOUNT: "$TARGET_ACCOUNT"
+          EOF
 
       - name: Deploy to Cloud Run
         run: |
