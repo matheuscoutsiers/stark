@@ -50,10 +50,16 @@ jobs:
             --project ${{ vars.GCP_PROJECT_ID }}
 
       - name: Gerar arquivo de variáveis de ambiente
+        env:
+          PRIVATE_KEY: ${{ vars.PRIVATE_KEY }}
+          STARKBANK_PROJECT_ID: ${{ vars.STARKBANK_PROJECT_ID }}
+          TARGET_ACCOUNT: ${{ vars.TARGET_ACCOUNT }}
         run: |
-          echo 'PRIVATE_KEY: "${{ vars.PRIVATE_KEY }}"' > env_vars.yaml
-          echo 'STARKBANK_PROJECT_ID: "${{ vars.STARKBANK_PROJECT_ID }}"' >> env_vars.yaml
-          echo 'TARGET_ACCOUNT: "${{ vars.TARGET_ACCOUNT }}"' >> env_vars.yaml
+          echo "PRIVATE_KEY: |" > env_vars.yaml
+          # Indenta cada linha da PRIVATE_KEY para formar um bloco YAML válido
+          printf "%s\n" "$PRIVATE_KEY" | sed 's/^/  /' >> env_vars.yaml
+          echo "STARKBANK_PROJECT_ID: \"$STARKBANK_PROJECT_ID\"" >> env_vars.yaml
+          echo "TARGET_ACCOUNT: \"$TARGET_ACCOUNT\"" >> env_vars.yaml
 
       - name: Deploy to Cloud Run
         run: |
