@@ -46,7 +46,8 @@ jobs:
       # Build da imagem usando Cloud Build (o Dockerfile precisa estar na raiz ou no local correto)
       - name: Build Docker image
         run: |
-          gcloud builds submit --tag gcr.io/${{ vars.GCP_PROJECT_ID }}/stark-back --project ${{ vars.GCP_PROJECT_ID }}
+          gcloud auth activate-service-account --key-file=${{ runner.temp }}/gcloud-service-account.json # Explicitly activate the service account
+          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/stark-back --project ${{ secrets.GCP_PROJECT_ID }}
 
       # Deploy no Cloud Run, definindo as variáveis de ambiente
       - name: Deploy to Cloud Run
