@@ -11,7 +11,7 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copia o restante do código para o container
 COPY . .
 
-# Expõe a porta (no nosso caso, 8000)
+# Expõe a porta (no nosso caso, 8080)
 EXPOSE 8080
 
 # Comando para iniciar o servidor Uvicorn com FastAPI
