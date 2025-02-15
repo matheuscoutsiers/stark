@@ -42,7 +42,7 @@ jobs:
           service_account_key: ${{ vars.GCP_SA_KEY }}   # JSON da Service Account
           project_id: ${{ vars.GCP_PROJECT_ID }}
           export_default_credentials: true
-          install_components: cloud-run
+          # install_components: cloud-run  <- REMOVED this line
 
       # Build da imagem no Cloud Build, usando seu Dockerfile
       - name: Build Docker image
