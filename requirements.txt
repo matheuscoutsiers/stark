@@ -3,3 +3,4 @@ uvicorn
 schedule
 starkbank
 pydantic
+python-dotenv
