@@ -55,11 +55,12 @@ jobs:
           STARKBANK_PROJECT_ID: ${{ vars.STARKBANK_PROJECT_ID }}
           TARGET_ACCOUNT: ${{ vars.TARGET_ACCOUNT }}
         run: |
-          PRIVATE_KEY_SINGLE_LINE=$(echo "$PRIVATE_KEY" | sed ':a;N;$!ba;s/\n/\\n/g')
+          PRIVATE_KEY_SINGLE_LINE=$(printf "%s" "$PRIVATE_KEY" | tr '\n' '\\n')
           {
             echo "PRIVATE_KEY: \"$PRIVATE_KEY_SINGLE_LINE\""
             echo "STARKBANK_PROJECT_ID: \"$STARKBANK_PROJECT_ID\""
-            echo "TARGET_ACCOUNT: \"$TARGET_ACCOUNT\""
+            # Envolve TARGET_ACCOUNT em aspas simples para evitar conflito com as aspas duplas internas
+            echo "TARGET_ACCOUNT: '$TARGET_ACCOUNT'"
           } > env_vars.yaml
 
       - name: Deploy to Cloud Run
