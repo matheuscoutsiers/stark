@@ -70,5 +70,5 @@ jobs:
             --region us-central1 \
             --platform managed \
             --allow-unauthenticated \
-            --env-vars-file env_vars.yaml
+            --env-vars-file env_vars.yaml \
             --timeout 10000
