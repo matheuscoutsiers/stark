@@ -40,28 +40,26 @@ jobs:
       - name: Configurar Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
         with:
-          version: 'latest' # Ensure gcloud is set up in PATH
-          project_id: ${{ vars.GCP_PROJECT_ID }} # still need project ID
+          version: 'latest'
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+
+      - name: Generate environment variables file
+        run: |
+          echo "PRIVATE_KEY=${{ vars.PRIVATE_KEY }}" >> env_vars.txt
+          echo "STARKBANK_PROJECT_ID=${{ vars.STARKBANK_PROJECT_ID }}" >> env_vars.txt
+          echo "TARGET_ACCOUNT=${{ vars.TARGET_ACCOUNT }}" >> env_vars.txt
 
       - name: Build Docker image
         run: |
           gcloud builds submit \
             --tag gcr.io/${{ vars.GCP_PROJECT_ID }}/stark-back \
             --project ${{ vars.GCP_PROJECT_ID }}
-          
-          # Generate environment variables file
-          - name: Generate environment variables file
-            run: |
-              echo "PRIVATE_KEY=${{ vars.PRIVATE_KEY }}" >> env_vars.txt
-              echo "STARKBANK_PROJECT_ID=${{ vars.STARKBANK_PROJECT_ID }}" >> env_vars.txt
-              echo "TARGET_ACCOUNT=${{ vars.TARGET_ACCOUNT }}" >> env_vars.txt
-          
-          # Deploy to Cloud Run, definindo as variáveis de ambiente usando arquivo
-          - name: Deploy to Cloud Run
-            run: |
-              gcloud run deploy stark-back \
-                --image gcr.io/${{ vars.GCP_PROJECT_ID }}/stark-back \
-                --region us-central1 \
-                --platform managed \
-                --allow-unauthenticated \
-                --env-vars-file=env_vars.txt
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy stark-back \
+            --image gcr.io/${{ vars.GCP_PROJECT_ID }}/stark-back \
+            --region us-central1 \
+            --platform managed \
+            --allow-unauthenticated \
+            --env-vars-file=env_vars.txt
