@@ -20,6 +20,8 @@ logger = logging.getLogger(__name__)
 # Configurar variáveis de ambiente
 private_key_content = os.environ.get("PRIVATE_KEY")
 project_id = os.environ.get("STARKBANK_PROJECT_ID")
+expected_auth_token = os.get("AUTH_TOKEN_CRON_JOB")
+expected_auth_token = "<your-secret-auth-token>"  # REPLACE with the same token from Cloud Scheduler
 
 user = starkbank.Project(
     environment="sandbox",
@@ -78,18 +80,9 @@ def issue_invoices():
         created_invoices = starkbank.invoice.create(invoices)
         for inv in created_invoices:
             logger.info(f"Invoice criada: ID {inv.id} | Valor: {inv.amount} centavos | Cliente: {inv.name}")
+
     except Exception as e:
         logger.error(f"Erro ao criar invoices: {e}")
-
-
-def run_scheduler():
-    schedule.every(3).hours.do(issue_invoices)
-    issue_invoices()  # Emite imediatamente
-    start_time = datetime.now(timezone.utc)
-    while (datetime.now(timezone.utc) - start_time) < timedelta(hours=24):
-        schedule.run_pending()
-        time.sleep(1)
-    logger.info("Encerrando emissão de invoices após 24 horas.")
 
 
 def send_transfer(net_amount):
@@ -114,10 +107,17 @@ def send_transfer(net_amount):
 app = FastAPI()
 
 
-@app.on_event("startup")
-def startup_event():
-    scheduler_thread = threading.Thread(target=run_scheduler, daemon=True)
-    scheduler_thread.start()
+@app.post("/trigger-invoices")
+async def trigger_invoices_endpoint(request: Request):
+    authorization_header = request.headers.get("Authorization")
+
+    if authorization_header != expected_auth_token:
+        logger.warning("Unauthorized request to /trigger-invoices")
+        return {"status": "error", "message": "Unauthorized"}
+
+    logger.info("Cloud Scheduler triggered invoice generation...")
+    issue_invoices()
+    return {"status": "ok", "message": "Invoice generation triggered"}
 
 
 @app.post("/webhook/invoice")
