@@ -31,7 +31,7 @@ jobs:
           PRIVATE_KEY: ${{ vars.PRIVATE_KEY }}
           STARKBANK_PROJECT_ID: ${{ vars.STARKBANK_PROJECT_ID }}
           TARGET_ACCOUNT: ${{ vars.TARGET_ACCOUNT }}
-          AUTH_TOKEN_CRON_JOB: ${{ secrets.AUTH_TOKEN_CRON_JOB }}
+          AUTH_TOKEN_CRON_JOB: ${{ vars.AUTH_TOKEN_CRON_JOB }}
 
       - name: Autenticar Google Cloud SDK
         uses: google-github-actions/auth@v1
@@ -55,7 +55,7 @@ jobs:
           PRIVATE_KEY: ${{ vars.PRIVATE_KEY }}
           STARKBANK_PROJECT_ID: ${{ vars.STARKBANK_PROJECT_ID }}
           TARGET_ACCOUNT: ${{ vars.TARGET_ACCOUNT }}
-          AUTH_TOKEN_CRON_JOB: ${{ secrets.AUTH_TOKEN_CRON_JOB }}
+          AUTH_TOKEN_CRON_JOB: ${{ vars.AUTH_TOKEN_CRON_JOB }}
         run: |
           PRIVATE_KEY_SINGLE_LINE=$(printf "%s" "$PRIVATE_KEY" | tr -d '\r' | tr '\n' '\\n')
           {
