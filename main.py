@@ -21,7 +21,6 @@ logger = logging.getLogger(__name__)
 private_key_content = os.environ.get("PRIVATE_KEY")
 project_id = os.environ.get("STARKBANK_PROJECT_ID")
 expected_auth_token = os.environ.get("AUTH_TOKEN_CRON_JOB")
-expected_auth_token = "<your-secret-auth-token>"  # REPLACE with the same token from Cloud Scheduler
 
 user = starkbank.Project(
     environment="sandbox",
