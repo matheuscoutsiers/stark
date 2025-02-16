@@ -1,13 +1,10 @@
 import os
 import json
 import random
-import threading
-import time
 import logging
 from datetime import datetime, timedelta, timezone
 from fastapi import FastAPI, Request
 import uvicorn
-import schedule
 import starkbank
 from dotenv import load_dotenv
 
