@@ -1,6 +1,5 @@
-import pytest
 from main import generate_valid_cpf, create_invoice
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 
 
 def test_generate_valid_cpf_length():
