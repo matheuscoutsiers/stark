@@ -106,7 +106,7 @@ app = FastAPI()
 async def trigger_invoices_endpoint(request: Request):
     authorization_header = request.headers.get("Authorization")
     logger.info("expected_auth_token=%s", expected_auth_token)
-    logger.debug(f"Received Authorization header: {authorization_header}")
+    logger.info(f"Received Authorization header: {authorization_header}")
 
     if authorization_header != expected_auth_token:
         logger.warning("Unauthorized request to /trigger-invoices")
