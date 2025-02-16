@@ -62,7 +62,7 @@ jobs:
             echo "PRIVATE_KEY: '$PRIVATE_KEY_SINGLE_LINE'"
             echo "STARKBANK_PROJECT_ID: '$STARKBANK_PROJECT_ID'"
             echo "TARGET_ACCOUNT: '$TARGET_ACCOUNT'"
-            echo "AUTH_TOKEN_CRON_JOB: 'AUTH_TOKEN_CRON_JOB'"
+            echo "AUTH_TOKEN_CRON_JOB: '$AUTH_TOKEN_CRON_JOB'"
           } > env_vars.yaml
 
       - name: Deploy to Cloud Run
